@@ -25,7 +25,9 @@ Route::group([
                 return response()->json([], 200);
             }
             $response = app(AuthController::class)->login($request);
-            return $response->setStatusCode(200); // Force status code to 200
+            // Extract response content and force status = 200 with JSON header
+            $content = method_exists($response, 'getContent') ? $response->getContent() : $response;
+            return response($content, 200)->header('Content-Type', 'application/json');
         });
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
