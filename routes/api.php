@@ -1,16 +1,17 @@
 <?php
 use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('test', function(){
     return "Hello World";
 });
 
-Route::group(['prefix' => 'auth'], function () {
+Route::group(['prefix' => 'auth', 'middleware' => ['api']], function () {
     Route::post('login', [AuthController::class, 'login']);
-    Route::post('logout', 'AuthController@logout');
-    Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', 'AuthController@me');
-    Route::post('changePassword', 'AuthController@changePassword');
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('me', [AuthController::class, 'me']);
+    Route::post('changePassword', [AuthController::class, 'changePassword']);
 });
 
 Route::get('content/{slug}/formatted', 'Api\ContentController@bySlug');
