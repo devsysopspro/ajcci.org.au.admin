@@ -24,7 +24,8 @@ Route::group([
             if ($request->isMethod('OPTIONS')) {
                 return response()->json([], 200);
             }
-            return app(AuthController::class)->login($request);
+            $response = app(AuthController::class)->login($request);
+            return $response->setStatusCode(200); // Force status code to 200
         });
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
