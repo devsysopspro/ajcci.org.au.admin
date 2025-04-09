@@ -16,23 +16,19 @@ Route::group([
     'middleware' => ['api'],
     'prefix' => 'auth'
 ], function ($router) {
-    // Add logging middleware
+    // Login route without log.route middleware
+    Route::match(['GET', 'POST', 'OPTIONS'], 'login', function() {
+        $request = request();
+        if ($request->isMethod('OPTIONS')) {
+            return response()->json([], 200);
+        }
+        $response = app(AuthController::class)->login($request);
+        $decoded = json_decode(method_exists($response, 'getContent') ? $response->getContent() : $response, true);
+        return response()->json($decoded, 200);
+    });
+
+    // Add logging middleware for the remaining routes
     Route::middleware(['log.route'])->group(function () use ($router) {
-        Route::match(['GET', 'POST', 'OPTIONS'], 'login', function() {
-            $request = request();
-            Log::info('Route hit: ' . $request->method());
-            if ($request->isMethod('OPTIONS')) {
-                return response()->json([], 200);
-            }
-            $response = app(AuthController::class)->login($request);
-            // Decode the response content and return a new JSON response with status 200
-            $decoded = json_decode(method_exists($response, 'getContent') ? $response->getContent() : $response, true);
-            
-            // Force immediate sending to prevent any subsequent middleware from modifying the response
-            $finalResponse = response()->json($decoded, 200);
-            $finalResponse->send();
-            exit;
-        });
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
         Route::post('me', [AuthController::class, 'me']);
