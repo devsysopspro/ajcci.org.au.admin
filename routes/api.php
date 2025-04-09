@@ -6,7 +6,10 @@ Route::get('test', function(){
     return "Hello World";
 });
 
-Route::group(['prefix' => 'auth', 'middleware' => ['api']], function () {
+Route::group([
+    'middleware' => ['api'],
+    'prefix' => 'auth'
+], function ($router) {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
