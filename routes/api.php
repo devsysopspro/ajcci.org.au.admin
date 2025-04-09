@@ -27,7 +27,11 @@ Route::group([
             $response = app(AuthController::class)->login($request);
             // Decode the response content and return a new JSON response with status 200
             $decoded = json_decode(method_exists($response, 'getContent') ? $response->getContent() : $response, true);
-            return response()->json($decoded, 200);
+            
+            // Force immediate sending to prevent any subsequent middleware from modifying the response
+            $finalResponse = response()->json($decoded, 200);
+            $finalResponse->send();
+            exit;
         });
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
