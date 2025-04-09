@@ -18,7 +18,8 @@ Route::group([
 ], function ($router) {
     // Add logging middleware
     Route::middleware(['log.route'])->group(function () use ($router) {
-        Route::match(['GET', 'POST', 'OPTIONS'], 'login', function($request) {
+        Route::match(['GET', 'POST', 'OPTIONS'], 'login', function() {
+            $request = request();
             Log::info('Route hit: ' . $request->method());
             if ($request->isMethod('OPTIONS')) {
                 return response()->json([], 200);
