@@ -18,7 +18,13 @@ Route::group([
 ], function ($router) {
     // Add logging middleware
     Route::middleware(['log.route'])->group(function () use ($router) {
-        Route::post('login', [AuthController::class, 'login']);
+        Route::match(['POST', 'OPTIONS'], 'login', function($request) {
+            Log::info('Route hit: ' . $request->method());
+            if ($request->isMethod('OPTIONS')) {
+                return response()->json([], 200);
+            }
+            return app(AuthController::class)->login($request);
+        });
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
         Route::post('me', [AuthController::class, 'me']);
