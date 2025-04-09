@@ -23,7 +23,10 @@ Route::group([
             return response()->json([], 200);
         }
         $response = app(AuthController::class)->login($request);
-        $decoded = json_decode(method_exists($response, 'getContent') ? $response->getContent() : $response, true);
+        $content = method_exists($response, 'getContent') ? $response->getContent() : $response;
+        $decoded = json_decode($content, true);
+        Log::info('Raw response content: ' . $content);
+        Log::info('Decoded response before returning: ' . print_r($decoded, true));
         return response()->json($decoded, 200);
     });
 
