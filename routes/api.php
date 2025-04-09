@@ -1,10 +1,12 @@
 <?php
+use App\Http\Controllers\AuthController;
+
 Route::get('test', function(){
     return "Hello World";
 });
 
-Route::group(['prefix' => 'auth'], function ($router) {
-    Route::any('login', 'AuthController@login');
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
