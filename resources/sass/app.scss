@@ -1,0 +1,34 @@
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+@import "~font-awesome/css/font-awesome.min.css";
+@import "~datatables.net-bs4/css/dataTables.bootstrap4.css";
+@import "~admin-lte/dist/css/adminlte.css";
+@import "~cropperjs/src/css/cropper";
+@import "~summernote/dist/summernote-lite.css";
+@import "~codemirror/lib/codemirror.css";
+@import "~codemirror/theme/monokai.css";
+@import "~vue-select/src/scss/vue-select.scss";
+
+.v-select {
+  &.is-invalid {
+
+    .vs__dropdown-toggle {
+      border-color: #dc3545;
+    }
+
+    &+.invalid-feedback {
+     display: block;
+    }
+  }
+}
+
+.nav.nav-treeview {
+    .nav-link, .nav-icon {
+        font-size: 0.9rem !important;
+    }
+}
