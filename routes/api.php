@@ -1,6 +1,12 @@
 <?php
 use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+
+// Add debug route to check if API is accessible
+Route::get('debug', function() {
+    return response()->json(['status' => 'API is working']);
+});
 
 Route::get('test', function(){
     return "Hello World";
@@ -10,11 +16,14 @@ Route::group([
     'middleware' => ['api'],
     'prefix' => 'auth'
 ], function ($router) {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::post('me', [AuthController::class, 'me']);
-    Route::post('changePassword', [AuthController::class, 'changePassword']);
+    // Add logging middleware
+    Route::middleware(['log.route'])->group(function () use ($router) {
+        Route::post('login', [AuthController::class, 'login']);
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::post('refresh', [AuthController::class, 'refresh']);
+        Route::post('me', [AuthController::class, 'me']);
+        Route::post('changePassword', [AuthController::class, 'changePassword']);
+    });
 });
 
 Route::get('content/{slug}/formatted', 'Api\ContentController@bySlug');
